@@ -129,10 +129,10 @@ PrefabInstance:
       addedObject: {fileID: 6397476008977653363}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 448705c1376cc4c47b9f2f4965846781, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4257200971794280123}
+      addedObject: {fileID: 1581186128733885963}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 448705c1376cc4c47b9f2f4965846781, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8527910808399913164}
+      addedObject: {fileID: 6957784240678407086}
     - targetCorrespondingSourceObject: {fileID: -4819223349682164798, guid: 448705c1376cc4c47b9f2f4965846781, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1549947901601643098}
@@ -208,7 +208,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4257200971794280123
+--- !u!114 &1581186128733885963
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -217,15 +217,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7672961999994257836}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd825cb876df14a4caa8b70cc2a9f669, type: 3}
+  m_Script: {fileID: 11500000, guid: f15c51ed65391164cbe5809191389d94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  counterPoint: {fileID: 0}
-  waitTimeAtCounter: 3
-  chaseSpeed: 5
-  attackDistance: 1.5
-  damageAmount: 100
---- !u!195 &8527910808399913164
+  targetPosition: {fileID: 0}
+  stoppingDistance: 0
+--- !u!195 &6957784240678407086
 NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -233,7 +230,7 @@ NavMeshAgent:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7672961999994257836}
   m_Enabled: 1
-  m_AgentTypeID: 0
+  m_AgentTypeID: 1479372276
   m_Radius: 0.5
   m_Speed: 3.5
   m_Acceleration: 8
