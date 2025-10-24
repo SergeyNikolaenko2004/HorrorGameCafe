@@ -2745,7 +2745,7 @@ PrefabInstance:
       objectReference: {fileID: 1846172761}
     - target: {fileID: 1581186128733885963, guid: 5d4835b763e309e42ab0dae6b56c78ec, type: 3}
       propertyPath: catchDistance
-      value: 2
+      value: 1.6
       objectReference: {fileID: 0}
     - target: {fileID: 1581186128733885963, guid: 5d4835b763e309e42ab0dae6b56c78ec, type: 3}
       propertyPath: dialoguePanel
@@ -13561,7 +13561,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1265755664
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16261,7 +16261,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1453498137
 RectTransform:
   m_ObjectHideFlags: 0
@@ -23518,7 +23518,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2027064039
 RectTransform:
   m_ObjectHideFlags: 0
