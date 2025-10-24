@@ -1,16 +1,22 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class CoffeeMachineInteract : InteractableObject
 {
-    public AudioClip coffeeBrewSound;
     public float brewTime = 3f;
-    public Transform cupPlacePosition; // Позиция куда ставится стакан в кофемашине
-    // Убираем sealedCoffeePrefab отсюда - теперь он в CoffeeOrderManager
-
+    public Transform cupPlacePosition; 
     private AudioSource audioSource;
     private bool isBrewing = false;
-    private GameObject placedCup; // Стакан, поставленный в машину
-    private bool isCoffeeSealed = false; // Закрыт ли стакан крышкой
+    private GameObject placedCup; 
+    private bool isCoffeeSealed = false; 
+
+    [Header("Подсказка")]
+    public GameObject hintPanel;
+    public TMP_Text hintText;
+    public string hintMessage = "Нажмите ЛКМ, чтобы кинуть  в недоброжелательного клиента ";
+    public float hintDisplayTime = 5f;
+    private Coroutine hintCoroutine;
 
     void Start()
     {
@@ -124,16 +130,7 @@ public class CoffeeMachineInteract : InteractableObject
         isBrewing = true;
         CoffeeOrderManager.Instance.ChangeState(CoffeeOrderManager.OrderState.CupInMachine);
 
-        // Воспроизводим звук
-        if (audioSource != null && coffeeBrewSound != null)
-        {
-            audioSource.PlayOneShot(coffeeBrewSound);
-            Debug.Log("Звук наливания кофе запущен");
-        }
-        else
-        {
-            Debug.LogError("Не могу воспроизвести звук: audioSource=" + audioSource + ", coffeeBrewSound=" + coffeeBrewSound);
-        }
+        AudioManager.Instance.PlayCoffeeBrewSound();
 
         Debug.Log("Кофе наливается... Ждем " + brewTime + " секунд");
 
@@ -192,10 +189,8 @@ public class CoffeeMachineInteract : InteractableObject
 
                 isCoffeeSealed = true;
 
-                // МЕНЯЕМ СОСТОЯНИЕ чтобы убрать крышку из рук
-                // Возвращаемся в состояние CupInMachine, но с закрытым стаканом
                 CoffeeOrderManager.Instance.ChangeState(CoffeeOrderManager.OrderState.CupInMachine);
-
+                ShowHint();
                 Debug.Log("Кофе закрыто крышкой! Теперь можно забирать");
             }
             else
@@ -206,6 +201,42 @@ public class CoffeeMachineInteract : InteractableObject
         else
         {
             Debug.LogError("Не могу закрыть крышкой: placedCup=" + placedCup + ", isCoffeeSealed=" + isCoffeeSealed);
+        }
+    }
+    void ShowHint()
+    {
+        if (hintPanel != null && hintText != null)
+        {
+            hintText.text = hintMessage;
+            hintPanel.SetActive(true);
+            Debug.Log("Показана подсказка: " + hintMessage);
+
+            // Запускаем таймер скрытия подсказки
+            if (hintCoroutine != null)
+            {
+                StopCoroutine(hintCoroutine);
+            }
+            hintCoroutine = StartCoroutine(HideHintAfterDelay());
+        }
+    }
+    IEnumerator HideHintAfterDelay()
+    {
+        yield return new WaitForSeconds(hintDisplayTime);
+        HideHint();
+    }
+
+    void HideHint()
+    {
+        if (hintPanel != null)
+        {
+            hintPanel.SetActive(false);
+            Debug.Log("Подсказка скрыта");
+        }
+
+        if (hintCoroutine != null)
+        {
+            StopCoroutine(hintCoroutine);
+            hintCoroutine = null;
         }
     }
 

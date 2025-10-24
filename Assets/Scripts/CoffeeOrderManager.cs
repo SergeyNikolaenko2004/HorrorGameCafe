@@ -1,3 +1,5 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class CoffeeOrderManager : MonoBehaviour
@@ -15,37 +17,38 @@ public class CoffeeOrderManager : MonoBehaviour
     }
 
     public OrderState currentState = OrderState.CanTakeCup;
-
-    // Префабы для визуализации в руках
     public GameObject emptyCupPrefab;
     public GameObject filledCupPrefab;
     public GameObject lidPrefab;
-    public GameObject sealedCoffeePrefab; // Префаб закрытого стакана с крышкой
-
-    // Родительский объект для предметов в руках (дочерний к камере)
+    public GameObject sealedCoffeePrefab; 
     public Transform handPosition;
-
-    // Текущие объекты в руках
+    public NPCController targetNPC;
+    public float throwForce = 10f;
     private GameObject currentCupInHand;
     private GameObject currentLidInHand;
+
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
     }
 
+    void Update()
+    {
+        if (currentState == OrderState.CoffeeReady && Input.GetMouseButtonDown(0))
+        {
+            ThrowCoffee();
+        }
+    }
+
     public void ChangeState(OrderState newState)
     {
         currentState = newState;
-        Debug.Log("State changed to: " + newState);
-
-        // Обновляем визуал предметов в руках
         UpdateHandVisuals();
     }
+
     void UpdateHandVisuals()
     {
-        // Удаляем старые предметы в руках, КРОМЕ случаев когда переходим В CupInMachine
-        // (потому что в CupInMachine стакан уже в машине, а не в руках)
         if (currentState != OrderState.CupInMachine)
         {
             if (currentCupInHand != null) Destroy(currentCupInHand);
@@ -53,11 +56,9 @@ public class CoffeeOrderManager : MonoBehaviour
         }
         else
         {
-            // Если переходим В состояние CupInMachine - все равно удаляем крышку из рук
             if (currentLidInHand != null) Destroy(currentLidInHand);
         }
 
-        // Остальной код без изменений...
         switch (currentState)
         {
             case OrderState.HasEmptyCup:
@@ -93,12 +94,13 @@ public class CoffeeOrderManager : MonoBehaviour
                 break;
 
             case OrderState.CupInMachine:
-                // В этом состоянии стакан в кофемашине, ничего не создаем в руках
+                break;
+
+            case OrderState.CanTakeCup:
                 break;
         }
     }
 
-    // Метод для сброса трансформа объекта к нулевым значениям
     void ResetObjectTransform(GameObject obj)
     {
         if (obj != null)
@@ -109,21 +111,69 @@ public class CoffeeOrderManager : MonoBehaviour
         }
     }
 
-    // Метод для получения текущего стакана в руках (для кофемашины)
     public GameObject GetCurrentCup()
     {
         return currentCupInHand;
     }
 
-    // Метод для очистки стакана в руках (после передачи в кофемашину)
     public void ClearCurrentCup()
     {
         currentCupInHand = null;
     }
 
-    // Получить префаб закрытого кофе
     public GameObject GetSealedCoffeePrefab()
     {
         return sealedCoffeePrefab;
+    }
+
+    // Бросок кофе в NPC
+    void ThrowCoffee()
+    {
+        if (currentCupInHand != null && targetNPC != null)
+        {
+            Debug.Log("Бросаем кофе в NPC!");
+            GameObject thrownCoffee = Instantiate(sealedCoffeePrefab,
+                handPosition.position,
+                handPosition.rotation);
+
+            Rigidbody rb = thrownCoffee.GetComponent<Rigidbody>();
+            if (rb == null)
+            {
+                rb = thrownCoffee.AddComponent<Rigidbody>();
+            }
+            Vector3 throwDirection = handPosition.forward + Vector3.up * 0.2f;
+            rb.AddForce(throwDirection * throwForce, ForceMode.Impulse);
+            ClearHandPosition();
+            currentCupInHand = null;
+            currentState = OrderState.CanTakeCup;
+            Debug.Log("Состояние изменено на: " + currentState);
+            targetNPC.ThrowCoffeeAtNPC();
+            Destroy(thrownCoffee, 3f);
+
+            Debug.Log("Кофе брошено! Руки пустые.");
+        }
+        else
+        {
+            Debug.LogWarning("Не могу бросить кофе: " +
+                (currentCupInHand == null ? "кофе нет в руках" : "NPC не назначен"));
+        }
+    }
+
+    // Метод для полной очистки handPosition от всех дочерних объектов
+    void ClearHandPosition()
+    {
+        if (handPosition != null)
+        {
+            // Уничтожаем все дочерние объекты
+            foreach (Transform child in handPosition)
+            {
+                Destroy(child.gameObject);
+            }
+            Debug.Log("HandPosition очищен от всех дочерних объектов");
+        }
+
+        // Также очищаем ссылки
+        currentCupInHand = null;
+        currentLidInHand = null;
     }
 }
