@@ -33,11 +33,9 @@ public class CoffeeOrderManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            // НЕ используем DontDestroyOnLoad - чтобы менеджер перезагружался со сценой
         }
         else
         {
-            // Если уже есть экземпляр - уничтожаем новый
             Destroy(gameObject);
             return;
         }
@@ -47,7 +45,6 @@ public class CoffeeOrderManager : MonoBehaviour
 
     void Start()
     {
-        // Дополнительная инициализация после Awake
         ResetManager();
     }
 
@@ -59,7 +56,6 @@ public class CoffeeOrderManager : MonoBehaviour
         }
     }
 
-    // Метод для полного сброса менеджера
     public void ResetManager()
     {
         currentState = OrderState.CanTakeCup;
@@ -75,7 +71,6 @@ public class CoffeeOrderManager : MonoBehaviour
 
     void UpdateHandVisuals()
     {
-        // Очищаем текущие объекты в руке
         if (currentState != OrderState.CupInMachine)
         {
             if (currentCupInHand != null)
@@ -98,7 +93,6 @@ public class CoffeeOrderManager : MonoBehaviour
             }
         }
 
-        // Создаем новые объекты в зависимости от состояния
         switch (currentState)
         {
             case OrderState.HasEmptyCup:
@@ -171,8 +165,6 @@ public class CoffeeOrderManager : MonoBehaviour
     {
         return sealedCoffeePrefab;
     }
-
-    // Бросок кофе в NPC
     void ThrowCoffee()
     {
         if (currentCupInHand != null && targetNPC != null)
@@ -206,7 +198,6 @@ public class CoffeeOrderManager : MonoBehaviour
         }
     }
 
-    // Метод для полной очистки handPosition от всех дочерних объектов
     void ClearHandPosition()
     {
         if (handPosition != null)
@@ -219,12 +210,10 @@ public class CoffeeOrderManager : MonoBehaviour
             Debug.Log("HandPosition очищен от всех дочерних объектов");
         }
 
-        // Также очищаем ссылки
         currentCupInHand = null;
         currentLidInHand = null;
     }
 
-    // Метод для принудительного сброса при загрузке сцены
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -237,7 +226,6 @@ public class CoffeeOrderManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // При загрузке любой сцены сбрасываем менеджер
         ResetManager();
     }
 }

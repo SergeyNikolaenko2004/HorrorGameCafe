@@ -51,22 +51,19 @@ public class CoffeeMachineInteract : InteractableObject
             return;
         }
 
-        // Если в руках крышка И есть стакан в машине - закрываем крышкой (ВЫСШИЙ ПРИОРИТЕТ)
         if (CoffeeOrderManager.Instance.currentState == CoffeeOrderManager.OrderState.HasLid &&
             placedCup != null && !isCoffeeSealed)
         {
             Debug.Log("Закрываем кофе крышкой...");
             SealCoffeeWithLid();
-            return; // Важно: return после успешного действия
+            return;
         }
-        // Если в руках пустой стакан - начинаем наливание
         else if (CoffeeOrderManager.Instance.currentState == CoffeeOrderManager.OrderState.HasEmptyCup)
         {
             Debug.Log("Начинаем наливание кофе...");
             PlaceCupInMachine();
             StartBrewing();
         }
-        // Если кофе готов в машине - забираем
         else if (placedCup != null && !isBrewing)
         {
             Debug.Log("Забираем готовый кофе...");
@@ -80,7 +77,6 @@ public class CoffeeMachineInteract : InteractableObject
 
     void OnDrawGizmos()
     {
-        // Рисуем красную сферу в месте где должен стоять стакан
         if (cupPlacePosition != null)
         {
             Gizmos.color = Color.red;
@@ -88,7 +84,6 @@ public class CoffeeMachineInteract : InteractableObject
         }
         else
         {
-            // Если cupPlacePosition не назначен, рисуем сферу на позиции кофемашины
             Gizmos.color = Color.yellow;
             Gizmos.DrawSphere(transform.position, 0.05f);
         }
@@ -96,17 +91,13 @@ public class CoffeeMachineInteract : InteractableObject
 
     void PlaceCupInMachine()
     {
-        // Получаем стакан из рук
         GameObject cupFromHand = CoffeeOrderManager.Instance.GetCurrentCup();
 
         if (cupFromHand != null && cupPlacePosition != null)
         {
             Debug.Log("Найден стакан в руках: " + cupFromHand.name);
 
-            // Сначала меняем родителя
             cupFromHand.transform.SetParent(cupPlacePosition);
-
-            // ПОЛНОСТЬЮ сбрасываем трансформацию
             cupFromHand.transform.localPosition = Vector3.zero;
             cupFromHand.transform.localRotation = Quaternion.identity;
             cupFromHand.transform.localScale = Vector3.one;
@@ -114,7 +105,6 @@ public class CoffeeMachineInteract : InteractableObject
             placedCup = cupFromHand;
             isCoffeeSealed = false;
 
-            // Очищаем ссылку на стакан в руках
             CoffeeOrderManager.Instance.ClearCurrentCup();
 
             Debug.Log("Поставил стакан в кофемашину на позицию: " + cupPlacePosition.position);
@@ -134,7 +124,6 @@ public class CoffeeMachineInteract : InteractableObject
 
         Debug.Log("Кофе наливается... Ждем " + brewTime + " секунд");
 
-        // Запускаем таймер готовности
         Invoke("FinishBrewing", brewTime);
     }
 
@@ -142,17 +131,14 @@ public class CoffeeMachineInteract : InteractableObject
     {
         isBrewing = false;
 
-        // Меняем стакан на наполненный
         if (placedCup != null)
         {
             Debug.Log("Заменяем пустой стакан на наполненный...");
 
-            // Запоминаем текущего родителя
             Transform currentParent = placedCup.transform.parent;
 
             Destroy(placedCup);
 
-            // Создаем наполненный стакан на том же месте
             if (CoffeeOrderManager.Instance.filledCupPrefab != null && currentParent != null)
             {
                 placedCup = Instantiate(CoffeeOrderManager.Instance.filledCupPrefab, currentParent);
@@ -175,13 +161,10 @@ public class CoffeeMachineInteract : InteractableObject
             {
                 Debug.Log("Закрываем кофе крышкой...");
 
-                // Запоминаем текущего родителя
                 Transform currentParent = placedCup.transform.parent;
 
-                // Уничтожаем текущий стакан
                 Destroy(placedCup);
 
-                // Создаем закрытый стакан на том же месте
                 placedCup = Instantiate(sealedPrefab, currentParent);
                 placedCup.transform.localPosition = Vector3.zero;
                 placedCup.transform.localRotation = Quaternion.identity;
@@ -211,7 +194,6 @@ public class CoffeeMachineInteract : InteractableObject
             hintPanel.SetActive(true);
             Debug.Log("Показана подсказка: " + hintMessage);
 
-            // Запускаем таймер скрытия подсказки
             if (hintCoroutine != null)
             {
                 StopCoroutine(hintCoroutine);
@@ -242,7 +224,6 @@ public class CoffeeMachineInteract : InteractableObject
 
     void TakeCoffee()
     {
-        // Возвращаем стакан в руку
         if (placedCup != null)
         {
             placedCup.transform.SetParent(CoffeeOrderManager.Instance.handPosition);
@@ -250,7 +231,6 @@ public class CoffeeMachineInteract : InteractableObject
             placedCup.transform.localRotation = Quaternion.identity;
             placedCup.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
-            // Обновляем состояние в зависимости от того, закрыт ли стакан
             if (isCoffeeSealed)
             {
                 CoffeeOrderManager.Instance.ChangeState(CoffeeOrderManager.OrderState.CoffeeReady);

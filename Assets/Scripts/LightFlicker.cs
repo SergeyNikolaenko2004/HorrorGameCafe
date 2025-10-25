@@ -10,7 +10,7 @@ public class LightFlicker : MonoBehaviour
 
     [Header("Цвета")]
     public Color normalColor = Color.white;
-    public Color fearColor = Color.red; // Красный цвет для страха
+    public Color fearColor = Color.red;
     public float colorChangeSpeed = 2f;
 
     private Light lightSource;
@@ -33,11 +33,9 @@ public class LightFlicker : MonoBehaviour
     {
         if (isFlickering && lightSource != null)
         {
-            // Случайное мигание света
             float noise = Mathf.PerlinNoise(Time.time * flickerSpeed, 0);
             lightSource.intensity = Mathf.Lerp(minIntensity, maxIntensity, noise);
 
-            // Плавное изменение цвета на красный
             if (isRedColor)
             {
                 lightSource.color = Color.Lerp(lightSource.color, fearColor, Time.deltaTime * colorChangeSpeed);
@@ -48,22 +46,21 @@ public class LightFlicker : MonoBehaviour
     public void StartFlicker()
     {
         isFlickering = true;
-        isRedColor = true; // Включаем красный цвет
+        isRedColor = true; 
     }
 
     public void StopFlicker()
     {
         isFlickering = false;
-        isRedColor = false; // Выключаем красный цвет
+        isRedColor = false; 
 
         if (lightSource != null)
         {
             lightSource.intensity = originalIntensity;
-            lightSource.color = originalColor; // Возвращаем оригинальный цвет
+            lightSource.color = originalColor;
         }
     }
 
-    // Дополнительный метод для быстрого переключения цвета
     public void SetRedColor(bool red)
     {
         isRedColor = red;

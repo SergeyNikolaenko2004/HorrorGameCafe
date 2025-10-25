@@ -371,8 +371,6 @@ public class NPCController : MonoBehaviour
         Cursor.visible = true;
     }
 
-    // Вернуться в главное меню
-    // Вернуться в главное меню
     IEnumerator ReturnToMainMenu()
     {
         Debug.Log($"Через {deathScreenTime} секунд переход в: {mainMenuSceneName}");
@@ -493,7 +491,6 @@ public class NPCController : MonoBehaviour
     // Для отладки в редакторе
     void OnDrawGizmosSelected()
     {
-        // Рисуем сферу радиуса catchDistance
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, catchDistance);
     }
