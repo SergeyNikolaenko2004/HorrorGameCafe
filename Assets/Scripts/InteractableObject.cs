@@ -1,11 +1,14 @@
 using UnityEngine;
 
-public class InteractableObject : MonoBehaviour
+public abstract class InteractableObject : MonoBehaviour
 {
-    public string itemName;
+    public string itemName = "Interactable Object";
 
-    public virtual void Interact()
+    public abstract void Interact();
+
+    // Метод для визуальной обратной связи
+    public virtual void ShowHint()
     {
-        Debug.Log("Interacted with: " + itemName);
+        Debug.Log($"Можно взаимодействовать с: {itemName}");
     }
 }

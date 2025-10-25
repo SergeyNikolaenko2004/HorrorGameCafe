@@ -7,7 +7,7 @@ public class SimpleFearEffectsManager : MonoBehaviour
 
     [Header("Эффекты для погони")]
     public CameraShake cameraShake;
-    public LightFlicker[] lights; // Все лампы в кафе
+    public LightFlicker[] lights; 
 
     private bool isChasing = false;
 

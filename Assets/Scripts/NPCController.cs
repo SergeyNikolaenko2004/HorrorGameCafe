@@ -372,12 +372,16 @@ public class NPCController : MonoBehaviour
     }
 
     // Вернуться в главное меню
+    // Вернуться в главное меню
     IEnumerator ReturnToMainMenu()
     {
         Debug.Log($"Через {deathScreenTime} секунд переход в: {mainMenuSceneName}");
 
         // Ждем перед переходом
         yield return new WaitForSeconds(deathScreenTime);
+
+        // ОСТАНОВИТЬ ВСЕ ЗВУКИ ПЕРЕД ПЕРЕХОДОМ
+        StopAllAudio();
 
         // Проверяем существует ли сцена
         if (Application.CanStreamedLevelBeLoaded(mainMenuSceneName))
@@ -395,6 +399,35 @@ public class NPCController : MonoBehaviour
                 string sceneName = System.IO.Path.GetFileNameWithoutExtension(scenePath);
                 Debug.Log($"- {sceneName}");
             }
+        }
+    }
+
+    // Остановить все звуки
+    void StopAllAudio()
+    {
+        // Останавливаем AudioManager
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.StopAllSounds();
+            Debug.Log("Все звуки остановлены через AudioManager");
+        }
+
+        // Останавливаем все аудио источники в сцене
+        AudioSource[] allAudioSources = FindObjectsOfType<AudioSource>();
+        foreach (AudioSource audioSource in allAudioSources)
+        {
+            if (audioSource != null && audioSource.isPlaying)
+            {
+                audioSource.Stop();
+            }
+        }
+        Debug.Log($"Остановлено {allAudioSources.Length} аудио источников");
+
+        // Также останавливаем все эффекты страха
+        if (SimpleFearEffectsManager.Instance != null)
+        {
+            SimpleFearEffectsManager.Instance.StopChaseEffects();
+            Debug.Log("Эффекты страха остановлены");
         }
     }
 

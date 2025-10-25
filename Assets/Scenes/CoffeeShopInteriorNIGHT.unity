@@ -1050,7 +1050,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 101916576}
-  - component: {fileID: 101916577}
   - component: {fileID: 101916578}
   - component: {fileID: 101916579}
   - component: {fileID: 101916580}
@@ -1077,26 +1076,6 @@ Transform:
   - {fileID: 79336205}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &101916577
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 101916575}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61462fe840b0a164d9bc8fd09c3ed9fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentState: 0
-  emptyCupPrefab: {fileID: 1193493573522322833, guid: eb7c75e59696f8f41860ff80c42f1729, type: 3}
-  filledCupPrefab: {fileID: 6613172027075006315, guid: 6daa81f73513a924295a3c95288bd0cb, type: 3}
-  lidPrefab: {fileID: 3294367219665497819, guid: 9ec4c3da2ebd3574ca075a45b05330d6, type: 3}
-  sealedCoffeePrefab: {fileID: 3559137867786860930, guid: 5e32c87641f24a2439021a5919d41b87, type: 3}
-  handPosition: {fileID: 601121363}
-  targetNPC: {fileID: 701235047}
-  throwForce: 10
 --- !u!114 &101916578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2745,7 +2724,7 @@ PrefabInstance:
       objectReference: {fileID: 1846172761}
     - target: {fileID: 1581186128733885963, guid: 5d4835b763e309e42ab0dae6b56c78ec, type: 3}
       propertyPath: catchDistance
-      value: 1.6
+      value: 1.7
       objectReference: {fileID: 0}
     - target: {fileID: 1581186128733885963, guid: 5d4835b763e309e42ab0dae6b56c78ec, type: 3}
       propertyPath: dialoguePanel
@@ -2758,6 +2737,10 @@ PrefabInstance:
     - target: {fileID: 1581186128733885963, guid: 5d4835b763e309e42ab0dae6b56c78ec, type: 3}
       propertyPath: targetPosition
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1581186128733885963, guid: 5d4835b763e309e42ab0dae6b56c78ec, type: 3}
+      propertyPath: deathScreenTime
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1581186128733885963, guid: 5d4835b763e309e42ab0dae6b56c78ec, type: 3}
       propertyPath: timeBetweenLines
@@ -3175,6 +3158,58 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3109c41452393e3479ba01d9d58ede70, type: 3}
+--- !u!1 &355494829
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 355494831}
+  - component: {fileID: 355494830}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &355494830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 355494829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61462fe840b0a164d9bc8fd09c3ed9fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentState: 0
+  emptyCupPrefab: {fileID: 1193493573522322833, guid: eb7c75e59696f8f41860ff80c42f1729, type: 3}
+  filledCupPrefab: {fileID: 6613172027075006315, guid: 6daa81f73513a924295a3c95288bd0cb, type: 3}
+  lidPrefab: {fileID: 3294367219665497819, guid: 9ec4c3da2ebd3574ca075a45b05330d6, type: 3}
+  sealedCoffeePrefab: {fileID: 3559137867786860930, guid: 5e32c87641f24a2439021a5919d41b87, type: 3}
+  handPosition: {fileID: 601121363}
+  targetNPC: {fileID: 701235047}
+  throwForce: 10
+--- !u!4 &355494831
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 355494829}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 305.5, y: 145.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &355742868
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17399,12 +17434,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5b0a49407865024ea6b077126d57ca1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 3
-  mouseSensitivity: 2
-  interactionDistance: 5
-  interactionLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
+  settings:
+    <WalkSpeed>k__BackingField: 3
+    <MouseSensitivity>k__BackingField: 2
+    <InteractionDistance>k__BackingField: 5
+    <InteractionLayerMask>k__BackingField:
+      serializedVersion: 2
+      m_Bits: 8
 --- !u!1001 &1523773454
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25106,3 +25142,4 @@ SceneRoots:
   - {fileID: 1770447278}
   - {fileID: 101916576}
   - {fileID: 1454555373}
+  - {fileID: 355494831}

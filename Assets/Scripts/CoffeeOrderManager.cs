@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CoffeeOrderManager : MonoBehaviour
 {
@@ -20,17 +21,34 @@ public class CoffeeOrderManager : MonoBehaviour
     public GameObject emptyCupPrefab;
     public GameObject filledCupPrefab;
     public GameObject lidPrefab;
-    public GameObject sealedCoffeePrefab; 
+    public GameObject sealedCoffeePrefab;
     public Transform handPosition;
     public NPCController targetNPC;
     public float throwForce = 10f;
     private GameObject currentCupInHand;
     private GameObject currentLidInHand;
 
-
     private void Awake()
     {
-        if (Instance == null) Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+            // НЕ используем DontDestroyOnLoad - чтобы менеджер перезагружался со сценой
+        }
+        else
+        {
+            // Если уже есть экземпляр - уничтожаем новый
+            Destroy(gameObject);
+            return;
+        }
+
+        ResetManager();
+    }
+
+    void Start()
+    {
+        // Дополнительная инициализация после Awake
+        ResetManager();
     }
 
     void Update()
@@ -41,6 +59,14 @@ public class CoffeeOrderManager : MonoBehaviour
         }
     }
 
+    // Метод для полного сброса менеджера
+    public void ResetManager()
+    {
+        currentState = OrderState.CanTakeCup;
+        ClearHandPosition();
+        Debug.Log("CoffeeOrderManager сброшен в начальное состояние");
+    }
+
     public void ChangeState(OrderState newState)
     {
         currentState = newState;
@@ -49,16 +75,30 @@ public class CoffeeOrderManager : MonoBehaviour
 
     void UpdateHandVisuals()
     {
+        // Очищаем текущие объекты в руке
         if (currentState != OrderState.CupInMachine)
         {
-            if (currentCupInHand != null) Destroy(currentCupInHand);
-            if (currentLidInHand != null) Destroy(currentLidInHand);
+            if (currentCupInHand != null)
+            {
+                Destroy(currentCupInHand);
+                currentCupInHand = null;
+            }
+            if (currentLidInHand != null)
+            {
+                Destroy(currentLidInHand);
+                currentLidInHand = null;
+            }
         }
         else
         {
-            if (currentLidInHand != null) Destroy(currentLidInHand);
+            if (currentLidInHand != null)
+            {
+                Destroy(currentLidInHand);
+                currentLidInHand = null;
+            }
         }
 
+        // Создаем новые объекты в зависимости от состояния
         switch (currentState)
         {
             case OrderState.HasEmptyCup:
@@ -66,6 +106,7 @@ public class CoffeeOrderManager : MonoBehaviour
                 {
                     currentCupInHand = Instantiate(emptyCupPrefab, handPosition);
                     ResetObjectTransform(currentCupInHand);
+                    Debug.Log("Создан пустой стакан в руке");
                 }
                 break;
 
@@ -74,6 +115,7 @@ public class CoffeeOrderManager : MonoBehaviour
                 {
                     currentCupInHand = Instantiate(filledCupPrefab, handPosition);
                     ResetObjectTransform(currentCupInHand);
+                    Debug.Log("Создан наполненный стакан в руке");
                 }
                 break;
 
@@ -82,6 +124,7 @@ public class CoffeeOrderManager : MonoBehaviour
                 {
                     currentLidInHand = Instantiate(lidPrefab, handPosition);
                     ResetObjectTransform(currentLidInHand);
+                    Debug.Log("Создана крышка в руке");
                 }
                 break;
 
@@ -90,13 +133,16 @@ public class CoffeeOrderManager : MonoBehaviour
                 {
                     currentCupInHand = Instantiate(sealedCoffeePrefab, handPosition);
                     ResetObjectTransform(currentCupInHand);
+                    Debug.Log("Создан готовый кофе в руке");
                 }
                 break;
 
             case OrderState.CupInMachine:
+                Debug.Log("Стакан в кофемашине - руки пустые");
                 break;
 
             case OrderState.CanTakeCup:
+                Debug.Log("Можно взять стакан - руки пустые");
                 break;
         }
     }
@@ -143,10 +189,11 @@ public class CoffeeOrderManager : MonoBehaviour
             }
             Vector3 throwDirection = handPosition.forward + Vector3.up * 0.2f;
             rb.AddForce(throwDirection * throwForce, ForceMode.Impulse);
+
             ClearHandPosition();
-            currentCupInHand = null;
             currentState = OrderState.CanTakeCup;
             Debug.Log("Состояние изменено на: " + currentState);
+
             targetNPC.ThrowCoffeeAtNPC();
             Destroy(thrownCoffee, 3f);
 
@@ -175,5 +222,22 @@ public class CoffeeOrderManager : MonoBehaviour
         // Также очищаем ссылки
         currentCupInHand = null;
         currentLidInHand = null;
+    }
+
+    // Метод для принудительного сброса при загрузке сцены
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // При загрузке любой сцены сбрасываем менеджер
+        ResetManager();
     }
 }
